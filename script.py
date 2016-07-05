@@ -6,7 +6,9 @@ import time
 
 startpath = "/home/bi/Desktop/test"
 
-teststr7 = re.compile(r"[^\d\W]")
+pattern1 = re.compile(r"[^\d\W]")
+pattern2 = re.compile(r"[^\w^\.\s]")
+pattern3 = re.compile(r"\s+")
 dnumberlist = []
 #cannot remember why I added this...
 
@@ -33,15 +35,15 @@ timeouts=True
 
 def sanatize(s):
      if (sanatizename==True):
-          s = re.sub(r"[^\w^\.\s]", '', s)
-          s = re.sub(r"\s+", sanatationchar, s)
+          s = re.sub(pattern2, '', s)
+          s = re.sub(pattern3, sanatationchar, s)
      return s
 
-def mangler(var1,var4):
+def splitter(var1,var4):
     var3, var2=[], []
     try:
         var2 = var1.split ("_",1) #split on first occuring _
-        if (len(var2)<2 and (re.search(teststr7, var2[0])is not None)):
+        if (len(var2)<2 or (re.search(pattern1, var2[0])is not None)):
             var2.insert (0, "001.03") # if it has no number, assign no number
         var3 = map(int, var2[0].split ("."))
         if all(isinstance(x,int) for x in var3):
@@ -57,7 +59,7 @@ def mangler(var1,var4):
             print ("no split possible")
     return()
 
-def changeur (currently,tobe):
+def changer (currently,tobe):
     for i in range(len(currently)):
         try:
             os.rename(current[i], tobe[i])
@@ -67,7 +69,7 @@ def changeur (currently,tobe):
             if debug==True:
                 print('%s is not changed, since it is currently in use (or other error,rights etc)'%(current[i]))
     if debug==True:
-        print("changeur done")
+        print("changer done")
     return()
    
 
@@ -75,7 +77,7 @@ def changeur (currently,tobe):
 def lecteur(root,basecode,dirlist):
     newname, dnumberlist, oldpath, var2, var3=[], [], [], [], []
     for subdir in dirlist:
-        var2,var3,var4=mangler(subdir, False)
+        var2,var3,var4=splitter(subdir, False)
         var3.pop() #shed last element
         var5=sanatize(var4) #make nice name without losign original
         if var3==basecode: #if equal to topnumber is equal to root, check for nice name, else continue
@@ -92,7 +94,7 @@ def lecteur(root,basecode,dirlist):
     return (maxd,oldpath,newname)
     
 
-def architecte (bcode,maxd,newname):
+def architect (bcode,maxd,newname):
     var2=[]
     for y in range(len(newname)):
         var2.append(os.path.join(dirname,'%s.%s_%s' % (bcode, (maxd+y), sanatize(newname[y]))))
@@ -108,16 +110,16 @@ def main(startpath):
         if (folders==True):
             if (dirname == startpath or (len(subdirList)==0 and len(filenames)==0)):
                 continue
-            compbasecode, basecode, var4 = mangler(os.path.basename(dirname), True)
+            compbasecode, basecode, var4 = splitter(os.path.basename(dirname), True)
             maxd,oldname,newname=lecteur(dirname,basecode,subdirList)
-            tobe=architecte(compbasecode,maxd,newname)
-            changeur(oldname,tobe)
+            tobe=architect(compbasecode,maxd,newname)
+            changer(oldname,tobe)
         if (files==True):
             tobe, oldname, newname=[], [], []
             maxd=0
             maxd,oldname,newname=lecteur(dirname,basecode,filenames)
-            tobe=architecte(compbasecode,maxd,newname)
-            changeur(oldname,tobe)
+            tobe=architect(compbasecode,maxd,newname)
+            changer(oldname,tobe)
             maxd=0
             tobe, oldname, newname=[], [], []
     return()
