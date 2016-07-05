@@ -26,4 +26,4 @@ like this:
 ```
 (we dont need it, al our files are in the lowest hirarchy level)
 
-script provided as is
+script provided as is, released GPLv3
