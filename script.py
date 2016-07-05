@@ -1,11 +1,10 @@
-import glob 
 import os
 import sys
 import string
 import re
 
 clear()
-startpath = "/home/bi/Desktop/proeftuin"
+startpath = "/home/bi/Desktop/test"
 #teststring1 = re.compile('(\d+(\.| |\_))+')
 #teststring2 = re.compile('\/(\w+\/)+(\d+(\.| |\_))+\w+$')
 #teststring3 = re.compile('((\d+)(\.| |\_))+')
@@ -52,7 +51,7 @@ sanatationchar='-'
 
 
 
-def urify(s):
+def sanatize(s):
      # remove all non-chars
      if (sanatizename==True):
           s = re.sub(r"[^\w^\.\s]", '', s)
@@ -101,7 +100,7 @@ def lecteur(root,basecode,dirlist):
     for subdir in dirlist:
         var2,var3,var4=mangler(subdir, False)
         var3.pop() #shed last element
-        var5=urify(var4) #make nice name without losign original
+        var5=sanatize(var4) #make nice name without losign original
         if var3==basecode: #if equal to topnumber is equal to root, check for nice name, else continue
             dnumberlist.append(int(var2[-1]))
             if var5 == var4:
@@ -119,7 +118,7 @@ def lecteur(root,basecode,dirlist):
 def architecte (bcode,maxd,newname):
     var2=[]
     for y in range(len(newname)):
-        var2.append(os.path.join(dirname,'%s.%s_%s' % (bcode, (maxd+y), urify(newname[y]))))
+        var2.append(os.path.join(dirname,'%s.%s_%s' % (bcode, (maxd+y), sanatize(newname[y]))))
     return(var2)
     
 def main(startpath):
@@ -141,7 +140,7 @@ def main(startpath):
             maxd=0
             maxd,oldname,newname=lecteur(dirname,basecode,filenames)
             tobe=architecte(compbasecode,maxd,newname)
-            #changeur(oldname,tobe)
+            changeur(oldname,tobe)
             maxd=0
             tobe, oldname, newname=[], [], []
     return()
@@ -168,8 +167,5 @@ def test3er():
     return()
 
 main(startpath)
-print("finished, kill")
-exit()
-
-
-
+print("finished")
+sys.exit()
