@@ -4,21 +4,11 @@ import string
 import re
 import time
 
-clear()
 startpath = "/home/bi/Desktop/test"
-#old regex strings (earlier system)
 
-#teststring1 = re.compile('(\d+(\.| |\_))+')
-#teststring2 = re.compile('\/(\w+\/)+(\d+(\.| |\_))+\w+$')
-#teststring3 = re.compile('((\d+)(\.| |\_))+')
-#teststring4 = re.compile('^(((\d+)\.?)+)+[^a-z]\w+$')
-#teststring5 = re.compile('(\d+$)')
-#teststring6 = re.compile('(^(\d+\.)+)')
-#teststring7 = re.compile('(\d\d+)')
 teststr7 = re.compile('([^\d\W])')
 dnumberlist = []
 #cannot remember why I added this...
-
 
 debug=False
 # print debug messages
@@ -41,39 +31,18 @@ timeouts=True
 #restart loop after timeout
 
 
-#
-#def rename(dir, pattern, titlePattern):
-#    for pathAndFilename in glob.iglob(os.path.join(dir, pattern)):
-#        title, ext = os.path.splitext(os.path.basename(pathAndFilename))
-#        os.rename(pathAndFilename, 
-#                  os.path.join(dir, titlePattern % title + ext))
-#
-#for root,dirname,filenames in os.walk(path):   
-#     for filename in filenames:
-#        i = filename.split(".")
-
-#filelist = [ f for f in os.listdir(startpath)]
-#print filelist
-
-
-
-
-
 def sanatize(s):
-     # remove all non-chars
      if (sanatizename==True):
           s = re.sub(r"[^\w^\.\s]", '', s)
-          # remove all whitespace
           s = re.sub(r"\s+", sanatationchar, s)
-          # return new name
      return s
 
 def mangler(var1,var4):
     var3, var2=[], []
     try:
-        var2 = var1.split ("_",1)
+        var2 = var1.split ("_",1) #split on first occuring _
         if (len(var2)<2 and (re.search(teststr7, var2[0])is not None)):
-            var2.insert (0, "001.03")
+            var2.insert (0, "001.03") # if it has no number, assign no number
         var3 = map(int, var2[0].split ("."))
         if all(isinstance(x,int) for x in var3):
             if var4 is True:
@@ -153,29 +122,8 @@ def main(startpath):
             tobe, oldname, newname=[], [], []
     return()
 
-
-
-startlevel = startpath.count(os.sep)
-def regmatch (dirname,pattern):
-    matchg = re.match(pattern, dirname)
-    if matchg is not None:
-        #print( "numbered dir detected") 
-        matchg1 = matchg.groups(1)
-        #print(matchg1[1])
-        matchg2 = re.match(teststring5, matchg1[1])
-        number.append(matchg2[0])
-    return()
-
-
-def test3er():
-    for dirName, subdirList, fileList in os.walk(startpath):
-        print('Found directory: %s' % dirName)
-        for fname in fileList:
-            print('\t%s' % fname)
-    return()
-
-
 while timeouts:
+     clear()
      main(startpath)
      time.sleep(timeout)
 sys.exit()
