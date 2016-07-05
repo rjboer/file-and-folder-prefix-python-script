@@ -6,7 +6,7 @@ import time
 
 startpath = "/home/bi/Desktop/test"
 
-teststr7 = re.compile('([^\d\W])')
+teststr7 = re.compile(r"[^\d\W]")
 dnumberlist = []
 #cannot remember why I added this...
 
@@ -55,7 +55,7 @@ def mangler(var1,var4):
     except:
         if debug==True:
             print ("no split possible")
-    return
+    return()
 
 def changeur (currently,tobe):
     for i in range(len(currently)):
