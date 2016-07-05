@@ -2,9 +2,12 @@ import os
 import sys
 import string
 import re
+import time
 
 clear()
 startpath = "/home/bi/Desktop/test"
+#old regex strings (earlier system)
+
 #teststring1 = re.compile('(\d+(\.| |\_))+')
 #teststring2 = re.compile('\/(\w+\/)+(\d+(\.| |\_))+\w+$')
 #teststring3 = re.compile('((\d+)(\.| |\_))+')
@@ -32,6 +35,11 @@ gitignore=True
 sanatizename=True
 sanatationchar='-'
 # cleanup names aaa bbb ccc becomes aaa-bbb-ccc
+
+timeout=10.00
+timeouts=True
+#restart loop after timeout
+
 
 #
 #def rename(dir, pattern, titlePattern):
@@ -166,6 +174,8 @@ def test3er():
             print('\t%s' % fname)
     return()
 
-main(startpath)
-print("finished")
+
+while timeouts:
+     main(startpath)
+     time.sleep(timeout)
 sys.exit()
