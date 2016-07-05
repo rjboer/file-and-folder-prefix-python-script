@@ -15,11 +15,25 @@ startpath = "/home/bi/Desktop/proeftuin"
 #teststring7 = re.compile('(\d\d+)')
 teststr7 = re.compile('([^\d\W])')
 dnumberlist = []
+#cannot remember why I added this...
+
 
 debug=False
+# print debug messages
+
 files=True
+#number files
+
 folders=True
+#number folders
+
 gitignore=True
+# ignore .git files
+
+sanatizename=True
+sanatationchar='-'
+# cleanup names aaa bbb ccc becomes aaa-bbb-ccc
+
 #
 #def rename(dir, pattern, titlePattern):
 #    for pathAndFilename in glob.iglob(os.path.join(dir, pattern)):
@@ -39,11 +53,12 @@ gitignore=True
 
 
 def urify(s):
-     # verwijder alle niet letters (alles anders dan nummers en letters)
-     s = re.sub(r"[^\w^\.\s]", '', s)
-     # verwijder alle whitespaces
-     s = re.sub(r"\s+", '_', s)
-     # return de nieuwe naam
+     # remove all non-chars
+     if (sanatizename==True):
+          s = re.sub(r"[^\w^\.\s]", '', s)
+          # remove all whitespace
+          s = re.sub(r"\s+", sanatationchar, s)
+          # return new name
      return s
 
 def mangler(var1,var4):
