@@ -60,8 +60,8 @@ timeouts=True
 
 
 def sanatize(s):
-     # remove all non-chars
      if (sanatizename==True):
+          # remove all non-chars
           s = re.sub(r"[^\w^\.\s]", '', s)
           # remove all whitespace
           s = re.sub(r"\s+", sanatationchar, s)
