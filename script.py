@@ -29,7 +29,7 @@ diffnumb=True # count folders,then files, files have own numbering system:
 #1.1 file1          1.3
 #1.2 file2          1.4
 
-
+clear = lambda: os.system('cls')
 
 def sanatize(s):
     print(s)
@@ -131,7 +131,7 @@ def main(startpath):
 
 
 while timeouts:
-     clear()
+     clear
      main(startpath)
      time.sleep(timeout)
 sys.exit()
