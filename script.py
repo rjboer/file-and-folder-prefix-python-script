@@ -4,7 +4,7 @@ import string
 import re
 import time
 
-startpath = "/home/bi/Desktop/test"
+startpath = r'/home/bi/Desktop/test'
 
 pattern1 = re.compile(r"[^\d\W]")# compiled regex string
 pattern2 = re.compile(r"[^\w^\.^\-\s]")
