@@ -23,7 +23,6 @@ func main() {
 	defer inFile.Close()
 	scanner := bufio.NewScanner(inFile)
 	scanner.Split(bufio.ScanLines)
-
 	for scanner.Scan() {
 		Path = append(Path,scanner.Text())
 	}
@@ -100,8 +99,6 @@ func getDirectories(path string, re1 *regexp.Regexp, re2 *regexp.Regexp, re3 *re
 							err := os.Rename(path+v, path+prefix+strconv.Itoa(k+1)+".  "+mystring[len(mystring)-1])
 							if err != nil {
 								fmt.Println(err)
-							} else {
-								fmt.Printf("Renamed %s --> %s\n", path+v, path+prefix+strconv.Itoa(k+1)+".  "+mystring[len(mystring)-1])
 							}
 							Directories[Index][k] = path + prefix + strconv.Itoa(k+1) + ".  " + mystring[len(mystring)-1]
 							SkipRegex = true
