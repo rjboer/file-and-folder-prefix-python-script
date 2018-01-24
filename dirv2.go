@@ -17,7 +17,6 @@ var Regex = []bool{}
 var Indextxt = false
 var RenameFiles = false
 var SkipRegex = false
-var ConfigDefault = "true"
 
 func main() {
 	inFile, _ := os.Open("config.txt")
@@ -42,7 +41,7 @@ func main() {
 
 func getDirectories(path string, re1 *regexp.Regexp, re2 *regexp.Regexp, re3 *regexp.Regexp, re4 *regexp.Regexp, prefix string, index int) {
 	Regex = nil
-	rename := true
+	rename := false
 	Indextxt = false
 	if path != "\\" {
 		files, _ := ioutil.ReadDir(path)
@@ -93,7 +92,70 @@ func getDirectories(path string, re1 *regexp.Regexp, re2 *regexp.Regexp, re3 *re
 				rename = true
 			}
 			if RenameFiles == true {
-				for k, v := range Directories[Index] {
+				if rename == true {
+					for k, v := range Directories[Index] {
+						if v != "" {
+							mystring := strings.Split(v, ".  ")
+							if strings.Contains(mystring[len(mystring)-1], ". ") {
+								mystring2 := strings.Split(mystring[len(mystring)-1], ". ")
+								if len(mystring) > 1 {
+									if path+v != path+prefix+strconv.Itoa(k+1)+".  "+mystring2[len(mystring2)-1] {
+										fmt.Printf("%s --> %s\n", path+v, path+prefix+strconv.Itoa(k+1)+".  "+mystring2[len(mystring2)-1])
+										err := os.Rename(path+v, path+prefix+strconv.Itoa(k+1)+".  "+mystring2[len(mystring2)-1])
+										Directories[Index][k] = prefix+strconv.Itoa(k+1)+".  "+mystring2[len(mystring2)-1]
+										if err != nil{
+											fmt.Println(err)
+										}
+									}
+								} else {
+									if len(mystring2) > 1 {
+										if path+v != path+prefix+strconv.Itoa(k+1)+".  "+mystring2[1] {
+											fmt.Printf("%s --> %s\n", path+v, path+prefix+strconv.Itoa(k+1)+".  "+mystring2[1])
+											err := os.Rename(path+v, path+prefix+strconv.Itoa(k+1)+".  "+mystring2[1])
+											Directories[Index][k] = prefix+strconv.Itoa(k+1)+".  "+mystring2[1]
+											if err != nil{
+												fmt.Println(err)
+											}
+										}
+									}/* else {
+										//fmt.Println("string test", v)
+									}*/
+								}
+							} else {
+								if len(mystring) > 1 {
+									if path+v != path+prefix+strconv.Itoa(k+1)+".  "+mystring[1] {
+										fmt.Printf("%s --> %s\n", path+v, path+prefix+strconv.Itoa(k+1)+".  "+mystring[1])
+										err := os.Rename(path+v, path+prefix+strconv.Itoa(k+1)+".  "+mystring[1])
+										Directories[Index][k] = prefix+strconv.Itoa(k+1)+".  "+mystring[1]
+										if err != nil{
+											fmt.Println(err)
+										}
+									}
+								}/* else {
+									//fmt.Println("string test", v)
+								}*/
+							}
+						}
+					}
+					last := ""
+					for k, v := range Directories[Index] {
+						if v != "" {
+							mystring := strings.Split(v, ".  ")
+							if mystring[0] == last {
+								fmt.Printf("%s <--> %s are equal %s\n", mystring[0], last, v)
+								err := os.Rename(path+v, path+prefix+strconv.Itoa(k+1)+".  "+mystring[len(mystring)-1])
+								if err != nil {
+									fmt.Println(err)
+								}
+								Directories[Index][k] = prefix + strconv.Itoa(k+1) + ".  " + mystring[len(mystring)-1]
+								last = prefix + strconv.Itoa(k+1)
+							} else {
+								last = prefix + mystring[0]
+							}
+						}
+					}
+					// under this is the old rename script
+					/*for k, v := range Directories[Index] {
 					if v != "" {
 						mystring := strings.Split(v, ".  ")
 						if !strings.Contains(mystring[0], prefix) {
@@ -122,6 +184,7 @@ func getDirectories(path string, re1 *regexp.Regexp, re2 *regexp.Regexp, re3 *re
 							last = mystring[0]
 						}
 					}
+				}*/
 				}
 			}
 			if rename == true {
@@ -173,6 +236,7 @@ func regexCheck(path string, re1 *regexp.Regexp, re2 *regexp.Regexp, re3 *regexp
 		return
 	}
 	for _, match := range re3.FindAllStringSubmatch(filename, -1) {
+		fmt.Println(match)
 		_ = match
 		Regex = append(Regex, true)
 		return
@@ -182,12 +246,13 @@ func regexCheck(path string, re1 *regexp.Regexp, re2 *regexp.Regexp, re3 *regexp
 		Regex = append(Regex, false)
 		return
 	}
+	fmt.Println(filename)
 	Regex = append(Regex, true)
 }
 
 func createIndex(path string) {
 	tempfile, err := os.OpenFile(path+"\\index.txt", os.O_RDWR|os.O_CREATE|os.O_RDONLY, os.ModePerm)
-	tempfile.WriteString(`index = `+ConfigDefault+`
+	tempfile.WriteString(`index = true
 
 This is the index file of Resato's auto indexer,
 change the index in true to let it crawl through your folders and re-number them
@@ -204,9 +269,9 @@ func checkIndex(path string) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	if strings.Contains(string(dat), "index = false") {
-		RenameFiles = false
+	if strings.Contains(string(dat), "index = true") {
+		RenameFiles = true
 		return
 	}
-	RenameFiles = true
+	RenameFiles = false
 }
